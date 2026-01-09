@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary">
+    <span>Transaction Dashboard</span>
+  </mat-toolbar>
+
+  <mat-card>
+    <mat-card-title>Historial de Transacciones</mat-card-title>
+    <button mat-raised-button color="primary" (click)="openTransactionForm()" style="margin-bottom: 16px;">
+      <mat-icon>add</mat-icon>
+      Nueva Transacción
+    </button>
+
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Monto </th>
+          <td mat-cell *matCellDef="let element"> {{element.amount | currency}} </td>
+        </ng-container>
+
+        <!-- Commission Column -->
+        <ng-container matColumnDef="commission">
+          <th mat-header-cell *matHeaderCellDef> Comisión </th>
+          <td mat-cell *matCellDef="let element"> {{element.commission | currency}} </td>
+        </ng-container>
+
+        <!-- Date Created Column -->
+        <ng-container matColumnDef="dateCreated">
+          <th mat-header-cell *matHeaderCellDef> Fecha de Creación </th>
+          <td mat-cell *matCellDef="let element"> {{element.dateCreated | date:'short'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

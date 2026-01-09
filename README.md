@@ -1,59 +1,87 @@
-# TransactionsSofkaFintechUi
+# transactions-sofka-fintech-ui
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
+![Angular](https://img.shields.io/badge/Angular-21.0.0-red?style=for-the-badge&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue?style=for-the-badge&logo=typescript)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-## Development server
+Este proyecto es una aplicación Angular UI para gestionar transacciones financieras. Aprovecha las modernas funciones de Angular, como los componentes independientes y el renderizado del lado del servidor (SSR), para ofrecer una experiencia de usuario rápida y receptiva.
 
-To start a local development server, run:
+## Requisitos de Sistema
 
-```bash
-ng serve
-```
+Para ejecutar este proyecto, necesitas tener instalado:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+*   **Node.js**: Versión `^20.x.x` o superior.
+*   **Angular CLI**: Versión `21.0.5`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Puedes verificar tus versiones con:
 
 ```bash
-ng generate --help
+node -v
+npm -v
+ng version
 ```
 
-## Building
+## Instalación y Setup
 
-To build the project run:
+Sigue estos pasos para configurar el proyecto localmente:
 
-```bash
-ng build
-```
+1.  Clona el repositorio:
+    ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd transactions-sofka-fintech-ui
+    ```
+2.  Instala las dependencias del proyecto:
+    ```bash
+    npm install
+    ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Configuración de Entorno
 
-## Running unit tests
+Este proyecto no utiliza archivos de entorno (`environment.ts`) tradicionales para gestionar variables de entorno. La URL base de la API se encuentra directamente en el servicio `TransactionService`. Para configurar la URL de la API, edita el archivo `src/app/core/services/transaction.service.ts`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Scripts de Desarrollo
 
-```bash
-ng test
-```
+Estos son los comandos disponibles para el desarrollo del proyecto:
 
-## Running end-to-end tests
+| Script                                      | Descripción                                                                 |
+| :------------------------------------------ | :-------------------------------------------------------------------------- |
+| `npm start` / `ng serve`                    | Levanta el servidor de desarrollo en `http://localhost:4200/`. Los cambios se recargan automáticamente. |
+| `npm run build` / `ng build`                | Compila el proyecto para producción en la carpeta `dist/`.                 |
+| `npm run watch`                             | Compila el proyecto en modo de observación, para recargas rápidas durante el desarrollo. |
+| `npm test` / `ng test`                      | Ejecuta las pruebas unitarias del proyecto.                                 |
+| `npm run serve:ssr:transactions-sofka-fintech-ui` | Levanta el servidor con Server-Side Rendering (SSR) habilitado. |
 
-For end-to-end (e2e) testing, run:
+## Arquitectura y Estructura
 
-```bash
-ng e2e
-```
+El proyecto sigue una arquitectura modular y escalable, utilizando un enfoque híbrido que combina Standalone Components con NgModules para la gestión de características.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+*   **Standalone Components**: La aplicación principal (`App` component) se arranca como un Standalone Component, aprovechando las últimas características de Angular para una mayor simplicidad y modularidad.
+*   **Organización de Carpetas**:
+    *   `src/app/core`: Contiene servicios singleton (como `TransactionService`), modelos, y otras utilidades que se utilizan en toda la aplicación.
+        *   `src/app/core/models`: Define las interfaces de datos, como `Transaction.model.ts`.
+        *   `src/app/core/services`: Aloja servicios que interactúan con la lógica de negocio o APIs.
+        *   `src/app/core/interceptors`: (Actualmente vacío) Si se implementaran interceptores HTTP, residirían aquí.
+    *   `src/app/shared`: (Actualmente vacío) Destinado a componentes, directivas o pipes reutilizables que no tienen una dependencia directa con una característica específica.
+    *   `src/app/features`: Contiene módulos o componentes standalone que encapsulan funcionalidades específicas de la aplicación.
+        *   `src/app/features/transactions`: Módulo lazy-loaded que maneja toda la lógica relacionada con las transacciones.
+            *   `src/app/features/transactions/pages`: Componentes que representan páginas completas dentro de la característica (e.g., `TransactionDashboardComponent`).
+            *   `src/app/features/transactions/components`: Componentes más pequeños y reutilizables dentro de la característica (e.g., `TransactionFormComponent`).
 
-## Additional Resources
+## Rutas Principales
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El enrutamiento principal se define en `src/app/app.routes.ts`, y las rutas de las características se gestionan en sus respectivos módulos de enrutamiento.
+
+| Ruta           | Carga                                            | Notas                                       |
+| :------------- | :----------------------------------------------- | :------------------------------------------ |
+| `/`            | Redirige a `/transactions`                       |                                             |
+| `/transactions`| Módulo `TransactionsModule` (Lazy Loading)       | Muestra el `TransactionDashboardComponent`  |
+
+## Consumo de API
+
+El proyecto interactúa con una API backend para la gestión de transacciones.
+
+*   **URL Base de la API**: `http://localhost:8080/api/v1/transactions`
+*   **Servicios Principales**:
+    *   `TransactionService` (`src/app/core/services/transaction.service.ts`): Encargado de realizar las operaciones CRUD para las transacciones (registro, obtención). Utiliza `HttpClient` de Angular para las solicitudes HTTP.
+
+**Nota**: La URL de la API está hardcodeada en el `TransactionService`. Para entornos de producción, se recomienda externalizar esta configuración mediante archivos de entorno, variables de entorno del sistema o un servicio de configuración.
